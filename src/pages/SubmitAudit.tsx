@@ -3,16 +3,19 @@ import { Layout } from "@/components/Layout";
 import { GlassCard, GlassCardContent, GlassCardHeader, GlassCardTitle } from "@/components/ui/glass-card";
 import { CyberButton } from "@/components/ui/cyber-button";
 import { CodeEditor } from "@/components/CodeEditor";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { FileText, Code2, Info, Zap, ArrowRight, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
 const SubmitAudit = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     code: "",
     projectName: "",
@@ -40,9 +43,29 @@ const SubmitAudit = () => {
     }
   };
 
-  const handleSubmit = () => {
-    // In a real app, this would submit to the blockchain
-    navigate("/report/audit-new");
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    
+    try {
+      // Show success toast
+      toast({
+        title: "Audit Submitted Successfully",
+        description: "Your smart contract is being analyzed by our AI auditors.",
+      });
+      
+      // Simulate processing time
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      
+      // Navigate to report
+      navigate("/report/audit-new");
+    } catch (error) {
+      toast({
+        title: "Submission Failed",
+        description: "There was an error submitting your audit. Please try again.",
+        variant: "destructive"
+      });
+      setIsSubmitting(false);
+    }
   };
 
   const canProceed = () => {
@@ -257,17 +280,24 @@ pub struct MyContract {
             ) : (
               <CyberButton 
                 onClick={handleSubmit}
-                disabled={!canProceed()}
-                glow={canProceed()}
+                disabled={!canProceed() || isSubmitting}
+                glow={canProceed() && !isSubmitting}
                 className="group"
               >
                 <Zap className="mr-2 h-4 w-4" />
-                Confirm Audit
+                {isSubmitting ? "Processing..." : "Confirm Audit"}
               </CyberButton>
             )}
           </div>
         </div>
       </div>
+      
+      {/* Loading Screen */}
+      <LoadingScreen 
+        isVisible={isSubmitting}
+        title="AI Auditors are inspecting your code..."
+        subtitle="This may take a few minutes. Please don't close this window."
+      />
     </Layout>
   );
 };

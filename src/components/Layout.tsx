@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { WalletConnect } from "./WalletConnect";
+import { NotificationSystem, useNotifications } from "./NotificationSystem";
 import { Shield, Activity, FileText, Home } from "lucide-react";
 
 interface LayoutProps {
@@ -10,6 +11,7 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [walletAddress] = useState("syntax.near");
+  const { notifications, addNotification, markAsRead, clearAll } = useNotifications();
 
   const navigation = [
     { name: "Home", href: "/", icon: Home },
@@ -19,6 +21,7 @@ export function Layout({ children }: LayoutProps) {
 
   const handleWalletConnect = () => {
     setIsWalletConnected(true);
+    addNotification("success", "Wallet Connected", "Successfully connected to NEAR Wallet");
     // In a real app, this would integrate with NEAR Wallet
   };
 
@@ -69,12 +72,19 @@ export function Layout({ children }: LayoutProps) {
               ))}
             </nav>
 
-            {/* Wallet Connect */}
-            <WalletConnect
-              isConnected={isWalletConnected}
-              onConnect={handleWalletConnect}
-              address={isWalletConnected ? walletAddress : undefined}
-            />
+            {/* Notifications & Wallet */}
+            <div className="flex items-center gap-3">
+              <NotificationSystem
+                notifications={notifications}
+                onMarkAsRead={markAsRead}
+                onClearAll={clearAll}
+              />
+              <WalletConnect
+                isConnected={isWalletConnected}
+                onConnect={handleWalletConnect}
+                address={isWalletConnected ? walletAddress : undefined}
+              />
+            </div>
           </div>
         </div>
       </header>

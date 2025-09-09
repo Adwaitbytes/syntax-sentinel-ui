@@ -1,11 +1,22 @@
+import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { GlassCard, GlassCardContent, GlassCardHeader, GlassCardTitle } from "@/components/ui/glass-card";
 import { CyberButton } from "@/components/ui/cyber-button";
 import { TrustScore } from "@/components/TrustScore";
+import { NFTCard } from "@/components/NFTCard";
+import { SearchAndFilter, FilterOptions } from "@/components/SearchAndFilter";
 import { Activity, FileText, Award, Plus, Clock, CheckCircle, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Dashboard = () => {
+  const [filters, setFilters] = useState<FilterOptions>({
+    search: "",
+    dateRange: "all",
+    scoreRange: "all",
+    status: "all",
+    sortBy: "date",
+    sortOrder: "desc"
+  });
   const recentAudits = [
     {
       id: "audit-001",
@@ -39,14 +50,28 @@ const Dashboard = () => {
       name: "DeFi Lending Protocol PoI",
       score: 92,
       mintDate: "2024-01-15",
-      image: "🛡️"
+      image: "🛡️",
+      rarity: "Epic" as const,
+      blockchain: "NEAR",
+      attributes: [
+        { trait_type: "Security Score", value: 92 },
+        { trait_type: "Gas Efficiency", value: "High" },
+        { trait_type: "Audit Date", value: "2024-01-15" }
+      ]
     },
     {
       id: "nft-003",
       name: "Token Staking Contract PoI", 
       score: 78,
       mintDate: "2024-01-12",
-      image: "🔒"
+      image: "🔒",
+      rarity: "Rare" as const,
+      blockchain: "NEAR",
+      attributes: [
+        { trait_type: "Security Score", value: 78 },
+        { trait_type: "Gas Efficiency", value: "Medium" },
+        { trait_type: "Audit Date", value: "2024-01-12" }
+      ]
     }
   ];
 
@@ -111,7 +136,15 @@ const Dashboard = () => {
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Recent Audits */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-6">
+            {/* Search and Filter */}
+            <SearchAndFilter
+              filters={filters}
+              onFiltersChange={setFilters}
+              resultCount={recentAudits.length}
+              placeholder="Search your audits..."
+            />
+            
             <GlassCard>
               <GlassCardHeader>
                 <GlassCardTitle className="flex items-center gap-2">
@@ -168,15 +201,10 @@ const Dashboard = () => {
                 </GlassCardTitle>
               </GlassCardHeader>
               <GlassCardContent>
-                <div className="space-y-3">
+                <div className="grid grid-cols-1 gap-4">
                   {nfts.map((nft) => (
-                    <div key={nft.id} className="flex items-center gap-3 p-3 bg-card/50 rounded-lg border border-border/50">
-                      <div className="text-2xl">{nft.image}</div>
-                      <div className="flex-1">
-                        <h5 className="font-medium text-primary text-sm">{nft.name}</h5>
-                        <p className="text-xs text-muted-foreground">Score: {nft.score}/100</p>
-                        <p className="text-xs text-muted-foreground">{nft.mintDate}</p>
-                      </div>
+                    <div key={nft.id} className="flex justify-center">
+                      <NFTCard nft={nft} size="sm" />
                     </div>
                   ))}
                   <CyberButton variant="outline" className="w-full">
