@@ -11,7 +11,7 @@
 
 *Revolutionary AI-powered smart contract auditing platform that ensures security, gas efficiency, and intent verification for vibe-coded contracts on NEAR Protocol.*
 
-[🚀 **Live Demo**](https://syntaxsentinel.lovable.app) • [📖 **Documentation**](#-documentation) • [🎯 **Features**](#-features) • [🛠️ **Tech Stack**](#️-tech-stack)
+[🚀 **Live Demo**](https://preview--syntax-sentinel-ui.lovable.app/) • [📖 **Documentation**](#-documentation) • [🎯 **Features**](#-features) • [🛠️ **Tech Stack**](#️-tech-stack)
 
 <img src="https://img.shields.io/github/license/yourusername/syntaxsentinel?style=for-the-badge" alt="License">
 <img src="https://img.shields.io/github/stars/yourusername/syntaxsentinel?style=for-the-badge" alt="Stars">
